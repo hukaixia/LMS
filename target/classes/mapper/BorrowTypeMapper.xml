@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.hw.dao.BorrowTypeMapper">
+  <resultMap id="BaseResultMap" type="jmu.hw.po.BorrowType">
+    <id column="borrow_type_id" jdbcType="CHAR" property="borrowTypeId" />
+    <result column="borrow_type_name" jdbcType="CHAR" property="borrowTypeName" />
+    <result column="fine_univalence" jdbcType="DECIMAL" property="fineUnivalence" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    borrow_type_id, borrow_type_name, fine_univalence
+  </sql>
+  <select id="selectByExample" parameterType="jmu.hw.po.BorrowTypeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from borrow_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_type
+    where borrow_type_id = #{borrowTypeId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from borrow_type
+    where borrow_type_id = #{borrowTypeId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="jmu.hw.po.BorrowTypeExample">
+    delete from borrow_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jmu.hw.po.BorrowType">
+    insert into borrow_type (borrow_type_id, borrow_type_name, fine_univalence
+      )
+    values (#{borrowTypeId,jdbcType=CHAR}, #{borrowTypeName,jdbcType=CHAR}, #{fineUnivalence,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="jmu.hw.po.BorrowType">
+    insert into borrow_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="borrowTypeId != null">
+        borrow_type_id,
+      </if>
+      <if test="borrowTypeName != null">
+        borrow_type_name,
+      </if>
+      <if test="fineUnivalence != null">
+        fine_univalence,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="borrowTypeId != null">
+        #{borrowTypeId,jdbcType=CHAR},
+      </if>
+      <if test="borrowTypeName != null">
+        #{borrowTypeName,jdbcType=CHAR},
+      </if>
+      <if test="fineUnivalence != null">
+        #{fineUnivalence,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jmu.hw.po.BorrowTypeExample" resultType="java.lang.Long">
+    select count(*) from borrow_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update borrow_type
+    <set>
+      <if test="record.borrowTypeId != null">
+        borrow_type_id = #{record.borrowTypeId,jdbcType=CHAR},
+      </if>
+      <if test="record.borrowTypeName != null">
+        borrow_type_name = #{record.borrowTypeName,jdbcType=CHAR},
+      </if>
+      <if test="record.fineUnivalence != null">
+        fine_univalence = #{record.fineUnivalence,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update borrow_type
+    set borrow_type_id = #{record.borrowTypeId,jdbcType=CHAR},
+      borrow_type_name = #{record.borrowTypeName,jdbcType=CHAR},
+      fine_univalence = #{record.fineUnivalence,jdbcType=DECIMAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jmu.hw.po.BorrowType">
+    update borrow_type
+    <set>
+      <if test="borrowTypeName != null">
+        borrow_type_name = #{borrowTypeName,jdbcType=CHAR},
+      </if>
+      <if test="fineUnivalence != null">
+        fine_univalence = #{fineUnivalence,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where borrow_type_id = #{borrowTypeId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jmu.hw.po.BorrowType">
+    update borrow_type
+    set borrow_type_name = #{borrowTypeName,jdbcType=CHAR},
+      fine_univalence = #{fineUnivalence,jdbcType=DECIMAL}
+    where borrow_type_id = #{borrowTypeId,jdbcType=CHAR}
+  </update>
+</mapper>

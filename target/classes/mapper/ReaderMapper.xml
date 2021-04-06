@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.hw.dao.ReaderMapper">
+  <resultMap id="BaseResultMap" type="jmu.hw.po.Reader">
+    <id column="reader_id" jdbcType="CHAR" property="readerId" />
+    <result column="reader_type_id" jdbcType="CHAR" property="readerTypeId" />
+    <result column="unit_id" jdbcType="CHAR" property="unitId" />
+    <result column="user_name" jdbcType="CHAR" property="userName" />
+    <result column="user_pswd" jdbcType="CHAR" property="userPswd" />
+    <result column="user_role" jdbcType="CHAR" property="userRole" />
+    <result column="reader_sex" jdbcType="TINYINT" property="readerSex" />
+    <result column="reader_email" jdbcType="CHAR" property="readerEmail" />
+    <result column="reader_phone" jdbcType="CHAR" property="readerPhone" />
+    <result column="reader_state" jdbcType="CHAR" property="readerState" />
+  </resultMap>
+   <resultMap id="BaseResultMapAll" type="jmu.hw.po.Reader">
+    <id column="reader_id" jdbcType="CHAR" property="readerId" />
+    <result column="reader_type_id" jdbcType="CHAR" property="readerTypeId" />
+    <result column="unit_id" jdbcType="CHAR" property="unitId" />
+    <result column="user_name" jdbcType="CHAR" property="userName" />
+    <result column="user_pswd" jdbcType="CHAR" property="userPswd" />
+    <result column="user_role" jdbcType="CHAR" property="userRole" />
+    <result column="reader_sex" jdbcType="TINYINT" property="readerSex" />
+    <result column="reader_email" jdbcType="CHAR" property="readerEmail" />
+    <result column="reader_phone" jdbcType="CHAR" property="readerPhone" />
+    <result column="reader_state" jdbcType="CHAR" property="readerState" />
+     <association property="unit" javaType="Unit">
+        <id column="unit_id" property="unitId"/>
+        <result column="unit_name" property="unitName"/>
+    </association>
+    <association property="readerType" javaType="ReaderType">
+        <id column="reader_type_id" property="readerTypeId"/>
+        <result column="reader_type_name" property="readerTypeName"/>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    reader_id, reader_type_id, unit_id, user_name, user_pswd, user_role, reader_sex, 
+    reader_email, reader_phone, reader_state
+  </sql>
+    <sql id="Base_Column_List_All">
+    reader_id, reader.reader_type_id, reader.unit_id, user_name, user_pswd, user_role, reader_sex, 
+    reader_email, reader_phone, reader_state,unit.unit_id,unit.unit_name,reader_type.reader_type_id,reader_type.reader_type_name
+  </sql>
+   <select id="selectByExampleByAll" parameterType="jmu.hw.po.ReaderExample" resultMap="BaseResultMapAll">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List_All" />
+    from (reader left join unit on reader.unit_id=unit.unit_id) 
+    left join reader_type on reader.reader_type_id=reader_type.reader_type_id
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <!-- selectByExampleByUnitPart -->
+    <select id="selectByExampleByUnitPart" parameterType="java.lang.String" resultMap="BaseResultMapAll">
+    select
+    <include refid="Base_Column_List_All" />
+    from (reader left join unit on reader.unit_id=unit.unit_id) 
+    left join reader_type on reader.reader_type_id=reader_type.reader_type_id
+    where unit.unit_name like #{unitName,jdbcType=CHAR}
+  </select>
+  <select id="selectByExample" parameterType="jmu.hw.po.ReaderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from reader
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from reader
+    where reader_id = #{readerId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from reader
+    where reader_id = #{readerId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="jmu.hw.po.ReaderExample">
+    delete from reader
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jmu.hw.po.Reader">
+    insert into reader (reader_id, reader_type_id, unit_id, 
+      user_name, user_pswd, user_role, 
+      reader_sex, reader_email, reader_phone, 
+      reader_state)
+    values (#{readerId,jdbcType=CHAR}, #{readerTypeId,jdbcType=CHAR}, #{unitId,jdbcType=CHAR}, 
+      #{userName,jdbcType=CHAR}, #{userPswd,jdbcType=CHAR}, #{userRole,jdbcType=CHAR}, 
+      #{readerSex,jdbcType=TINYINT}, #{readerEmail,jdbcType=CHAR}, #{readerPhone,jdbcType=CHAR}, 
+      #{readerState,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jmu.hw.po.Reader">
+    insert into reader
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="readerId != null">
+        reader_id,
+      </if>
+      <if test="readerTypeId != null">
+        reader_type_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userPswd != null">
+        user_pswd,
+      </if>
+      <if test="userRole != null">
+        user_role,
+      </if>
+      <if test="readerSex != null">
+        reader_sex,
+      </if>
+      <if test="readerEmail != null">
+        reader_email,
+      </if>
+      <if test="readerPhone != null">
+        reader_phone,
+      </if>
+      <if test="readerState != null">
+        reader_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="readerId != null">
+        #{readerId,jdbcType=CHAR},
+      </if>
+      <if test="readerTypeId != null">
+        #{readerTypeId,jdbcType=CHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=CHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=CHAR},
+      </if>
+      <if test="userPswd != null">
+        #{userPswd,jdbcType=CHAR},
+      </if>
+      <if test="userRole != null">
+        #{userRole,jdbcType=CHAR},
+      </if>
+      <if test="readerSex != null">
+        #{readerSex,jdbcType=TINYINT},
+      </if>
+      <if test="readerEmail != null">
+        #{readerEmail,jdbcType=CHAR},
+      </if>
+      <if test="readerPhone != null">
+        #{readerPhone,jdbcType=CHAR},
+      </if>
+      <if test="readerState != null">
+        #{readerState,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jmu.hw.po.ReaderExample" resultType="java.lang.Long">
+    select count(*) from reader
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update reader
+    <set>
+      <if test="record.readerId != null">
+        reader_id = #{record.readerId,jdbcType=CHAR},
+      </if>
+      <if test="record.readerTypeId != null">
+        reader_type_id = #{record.readerTypeId,jdbcType=CHAR},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=CHAR},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=CHAR},
+      </if>
+      <if test="record.userPswd != null">
+        user_pswd = #{record.userPswd,jdbcType=CHAR},
+      </if>
+      <if test="record.userRole != null">
+        user_role = #{record.userRole,jdbcType=CHAR},
+      </if>
+      <if test="record.readerSex != null">
+        reader_sex = #{record.readerSex,jdbcType=TINYINT},
+      </if>
+      <if test="record.readerEmail != null">
+        reader_email = #{record.readerEmail,jdbcType=CHAR},
+      </if>
+      <if test="record.readerPhone != null">
+        reader_phone = #{record.readerPhone,jdbcType=CHAR},
+      </if>
+      <if test="record.readerState != null">
+        reader_state = #{record.readerState,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update reader
+    set reader_id = #{record.readerId,jdbcType=CHAR},
+      reader_type_id = #{record.readerTypeId,jdbcType=CHAR},
+      unit_id = #{record.unitId,jdbcType=CHAR},
+      user_name = #{record.userName,jdbcType=CHAR},
+      user_pswd = #{record.userPswd,jdbcType=CHAR},
+      user_role = #{record.userRole,jdbcType=CHAR},
+      reader_sex = #{record.readerSex,jdbcType=TINYINT},
+      reader_email = #{record.readerEmail,jdbcType=CHAR},
+      reader_phone = #{record.readerPhone,jdbcType=CHAR},
+      reader_state = #{record.readerState,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jmu.hw.po.Reader">
+    update reader
+    <set>
+      <if test="readerTypeId != null">
+        reader_type_id = #{readerTypeId,jdbcType=CHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=CHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=CHAR},
+      </if>
+      <if test="userPswd != null">
+        user_pswd = #{userPswd,jdbcType=CHAR},
+      </if>
+      <if test="userRole != null">
+        user_role = #{userRole,jdbcType=CHAR},
+      </if>
+      <if test="readerSex != null">
+        reader_sex = #{readerSex,jdbcType=TINYINT},
+      </if>
+      <if test="readerEmail != null">
+        reader_email = #{readerEmail,jdbcType=CHAR},
+      </if>
+      <if test="readerPhone != null">
+        reader_phone = #{readerPhone,jdbcType=CHAR},
+      </if>
+      <if test="readerState != null">
+        reader_state = #{readerState,jdbcType=CHAR},
+      </if>
+    </set>
+    where reader_id = #{readerId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jmu.hw.po.Reader">
+    update reader
+    set reader_type_id = #{readerTypeId,jdbcType=CHAR},
+      unit_id = #{unitId,jdbcType=CHAR},
+      user_name = #{userName,jdbcType=CHAR},
+      user_pswd = #{userPswd,jdbcType=CHAR},
+      user_role = #{userRole,jdbcType=CHAR},
+      reader_sex = #{readerSex,jdbcType=TINYINT},
+      reader_email = #{readerEmail,jdbcType=CHAR},
+      reader_phone = #{readerPhone,jdbcType=CHAR},
+      reader_state = #{readerState,jdbcType=CHAR}
+    where reader_id = #{readerId,jdbcType=CHAR}
+  </update>
+</mapper>

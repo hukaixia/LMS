@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.hw.dao.PressMapper">
+  <resultMap id="BaseResultMap" type="jmu.hw.po.Press">
+    <id column="press_id" jdbcType="CHAR" property="pressId" />
+    <result column="region_id" jdbcType="CHAR" property="regionId" />
+    <result column="press_name" jdbcType="CHAR" property="pressName" />
+  </resultMap>
+   <resultMap id="BaseResultMapWithAdress" type="jmu.hw.po.Press">
+    <id column="press_id" jdbcType="CHAR" property="pressId" />
+    <result column="region_id" jdbcType="CHAR" property="regionId" />
+    <result column="press_name" jdbcType="CHAR" property="pressName" />
+    <association property="region" javaType="Region">
+        <id column="region_id" property="regionId"/>
+        <result column="region_name" property="regionName"/>
+        <result column="city_id" property="cityId"/>
+        <association property="city" javaType="City">
+           <id column="city_id" property="cityId"/>
+           <result column="city_name" property="cityName"/>
+           <result column="province_id" property="provinceId"/>
+              <association property="province" javaType="Province">
+	           <id column="province_id" property="provinceId"/>
+	           <result column="province_name" property="provinceName"/>
+	          </association>
+        </association>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    press_id, region_id, press_name
+  </sql>
+  <sql id="Base_Column_List_With_Adress">
+    press_id, press.region_id, press_name,region.region_id,region.region_name,region.city_id,
+    city.city_id,city.city_name,city.province_id,province.province_id,province.province_name
+  </sql>
+   <select id="selectByPressId" parameterType="java.lang.String" resultMap="BaseResultMapWithAdress">
+    select 
+    <include refid="Base_Column_List_With_Adress" />
+    from (press left join region on press.region_id = region.region_id) left join (city left join province on city.province_id = province.province_id) on region.city_id = city.city_id
+    where press_id = #{pressId,jdbcType=CHAR}
+  </select>
+  <select id="selectByExample" parameterType="jmu.hw.po.PressExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from press
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from press
+    where press_id = #{pressId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from press
+    where press_id = #{pressId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="jmu.hw.po.PressExample">
+    delete from press
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jmu.hw.po.Press">
+    insert into press (press_id, region_id, press_name
+      )
+    values (#{pressId,jdbcType=CHAR}, #{regionId,jdbcType=CHAR}, #{pressName,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="jmu.hw.po.Press">
+    insert into press
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pressId != null">
+        press_id,
+      </if>
+      <if test="regionId != null">
+        region_id,
+      </if>
+      <if test="pressName != null">
+        press_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pressId != null">
+        #{pressId,jdbcType=CHAR},
+      </if>
+      <if test="regionId != null">
+        #{regionId,jdbcType=CHAR},
+      </if>
+      <if test="pressName != null">
+        #{pressName,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jmu.hw.po.PressExample" resultType="java.lang.Long">
+    select count(*) from press
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update press
+    <set>
+      <if test="record.pressId != null">
+        press_id = #{record.pressId,jdbcType=CHAR},
+      </if>
+      <if test="record.regionId != null">
+        region_id = #{record.regionId,jdbcType=CHAR},
+      </if>
+      <if test="record.pressName != null">
+        press_name = #{record.pressName,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update press
+    set press_id = #{record.pressId,jdbcType=CHAR},
+      region_id = #{record.regionId,jdbcType=CHAR},
+      press_name = #{record.pressName,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jmu.hw.po.Press">
+    update press
+    <set>
+      <if test="regionId != null">
+        region_id = #{regionId,jdbcType=CHAR},
+      </if>
+      <if test="pressName != null">
+        press_name = #{pressName,jdbcType=CHAR},
+      </if>
+    </set>
+    where press_id = #{pressId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jmu.hw.po.Press">
+    update press
+    set region_id = #{regionId,jdbcType=CHAR},
+      press_name = #{pressName,jdbcType=CHAR}
+    where press_id = #{pressId,jdbcType=CHAR}
+  </update>
+</mapper>

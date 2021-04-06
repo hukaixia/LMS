@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+<!-- 扫描组件 -->
+	<context:component-scan base-package="jmu.hw">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 引入资源文件 -->
+	<context:property-placeholder location="classpath:jdbcConfig.properties" />
+	    <!--spring整合MyBatis-->
+    <bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+
+	<!-- 管理mybatis操作数据库的会话对象sqlsession -->
+	<bean  id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	   <!-- 设置mybatis核心配置文件的路径 -->
+	   <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	   <!-- 设置数据源 -->
+	   <property name="dataSource" ref="pooledDataSource"></property>
+	   <!-- 设置映射文件路径 -->
+	   <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+	</bean>
+	<!-- 对应几个接口，就有几个动态代理实现类，并由spring容器管理 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="jmu.hw.dao"></property>
+	</bean>
+	
+     	<!-- 声明事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="pooledDataSource"></property>
+	</bean>
+
+	<!-- 开启事务注解驱动 -->
+	<tx:annotation-driven />
+    <!--    配置AOP增强-->
+    <aop:config>
+        <!-- 切入点表达式 -->
+        <aop:pointcut expression="execution(* jmu.hw.service..*(..))" id="txPoint"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+    </aop:config>
+    
+    <tx:advice id="txAdvice">
+         <tx:attributes>
+         <!-- 所有切入方法都是事务方法 -->
+             <tx:method name="*"/>
+             <tx:method name="get*" read-only="true"/>
+         </tx:attributes>
+    </tx:advice>
+</beans>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://www.mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+   <context id="DB2Tables" targetRuntime="MyBatis3">
+   
+    <commentGenerator>
+      <property name="suppressAllComments" value="true"></property>
+    </commentGenerator>
+    
+	<!-- 设置连接数据库的信息 -->
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+        connectionURL="jdbc:mysql://127.0.0.1:3306/library?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=UTC&amp;rewriteBatchedStatements=true&amp;allowPublicKeyRetrieval=true"
+        userId="root"
+        password="hkx1457542968">
+        <property name="nullCatalogMeansCurrent" value="true"/>
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver >
+
+	<!-- javabean的生成策略 -->
+    <javaModelGenerator targetPackage="jmu.hw.po" targetProject="./src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+
+	<!-- 映射文件的生成策略 -->
+    <sqlMapGenerator targetPackage="mapper"  targetProject="./src/main/resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+	<!-- mapper接口的生成策略 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="jmu.hw.dao"  targetProject="./src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+	<!-- 设置要将数据库中的哪张表逆向生成哪一个javabean -->	
+	<!-- 实体类、接口、mapper映射文件 -->
+	 	
+	<table tableName="fine" domainObjectName="Fine"></table>
+	<table tableName="fine_detail" domainObjectName="FineDetail"></table>
+  </context>
+</generatorConfiguration>

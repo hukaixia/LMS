@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.hw.dao.BranchMapper">
+  <resultMap id="BaseResultMap" type="jmu.hw.po.Branch">
+    <id column="branch_id" jdbcType="CHAR" property="branchId" />
+    <result column="branch_name" jdbcType="CHAR" property="branchName" />
+    <result column="branch_phone" jdbcType="CHAR" property="branchPhone" />
+    <result column="branch_address" jdbcType="CHAR" property="branchAddress" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    branch_id, branch_name, branch_phone, branch_address
+  </sql>
+  <select id="selectByExample" parameterType="jmu.hw.po.BranchExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from branch
+    where branch_id = #{branchId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from branch
+    where branch_id = #{branchId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="jmu.hw.po.BranchExample">
+    delete from branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jmu.hw.po.Branch">
+    insert into branch (branch_id, branch_name, branch_phone, 
+      branch_address)
+    values (#{branchId,jdbcType=CHAR}, #{branchName,jdbcType=CHAR}, #{branchPhone,jdbcType=CHAR}, 
+      #{branchAddress,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="jmu.hw.po.Branch">
+    insert into branch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="branchId != null">
+        branch_id,
+      </if>
+      <if test="branchName != null">
+        branch_name,
+      </if>
+      <if test="branchPhone != null">
+        branch_phone,
+      </if>
+      <if test="branchAddress != null">
+        branch_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="branchId != null">
+        #{branchId,jdbcType=CHAR},
+      </if>
+      <if test="branchName != null">
+        #{branchName,jdbcType=CHAR},
+      </if>
+      <if test="branchPhone != null">
+        #{branchPhone,jdbcType=CHAR},
+      </if>
+      <if test="branchAddress != null">
+        #{branchAddress,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jmu.hw.po.BranchExample" resultType="java.lang.Long">
+    select count(*) from branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update branch
+    <set>
+      <if test="record.branchId != null">
+        branch_id = #{record.branchId,jdbcType=CHAR},
+      </if>
+      <if test="record.branchName != null">
+        branch_name = #{record.branchName,jdbcType=CHAR},
+      </if>
+      <if test="record.branchPhone != null">
+        branch_phone = #{record.branchPhone,jdbcType=CHAR},
+      </if>
+      <if test="record.branchAddress != null">
+        branch_address = #{record.branchAddress,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update branch
+    set branch_id = #{record.branchId,jdbcType=CHAR},
+      branch_name = #{record.branchName,jdbcType=CHAR},
+      branch_phone = #{record.branchPhone,jdbcType=CHAR},
+      branch_address = #{record.branchAddress,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jmu.hw.po.Branch">
+    update branch
+    <set>
+      <if test="branchName != null">
+        branch_name = #{branchName,jdbcType=CHAR},
+      </if>
+      <if test="branchPhone != null">
+        branch_phone = #{branchPhone,jdbcType=CHAR},
+      </if>
+      <if test="branchAddress != null">
+        branch_address = #{branchAddress,jdbcType=CHAR},
+      </if>
+    </set>
+    where branch_id = #{branchId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jmu.hw.po.Branch">
+    update branch
+    set branch_name = #{branchName,jdbcType=CHAR},
+      branch_phone = #{branchPhone,jdbcType=CHAR},
+      branch_address = #{branchAddress,jdbcType=CHAR}
+    where branch_id = #{branchId,jdbcType=CHAR}
+  </update>
+</mapper>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.hw.dao.BorrowMapper">
+  <resultMap id="BaseResultMap" type="jmu.hw.po.Borrow">
+    <id column="book_id" jdbcType="CHAR" property="bookId" />
+    <id column="reader_id" jdbcType="CHAR" property="readerId" />
+    <id column="borrow_date" jdbcType="DATE" property="borrowDate" />
+    <result column="return_date" jdbcType="DATE" property="returnDate" />
+    <result column="borrow_state" jdbcType="DATE" property="borrowState" />
+    <result column="renew_state" jdbcType="SMALLINT" property="renewState" />
+    <result column="return_readate" jdbcType="DATE" property="returnReadate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    book_id, reader_id, borrow_date, return_date, borrow_state, renew_state, return_readate
+  </sql>
+  <select id="selectByExample" parameterType="jmu.hw.po.BorrowExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from borrow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="jmu.hw.po.BorrowKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from borrow
+    where book_id = #{bookId,jdbcType=CHAR}
+      and reader_id = #{readerId,jdbcType=CHAR}
+      and borrow_date = #{borrowDate,jdbcType=DATE}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="jmu.hw.po.BorrowKey">
+    delete from borrow
+    where book_id = #{bookId,jdbcType=CHAR}
+      and reader_id = #{readerId,jdbcType=CHAR}
+      and borrow_date = #{borrowDate,jdbcType=DATE}
+  </delete>
+  <delete id="deleteByExample" parameterType="jmu.hw.po.BorrowExample">
+    delete from borrow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="jmu.hw.po.Borrow">
+    insert into borrow (book_id, reader_id, borrow_date, 
+      return_date, borrow_state, renew_state, 
+      return_readate)
+    values (#{bookId,jdbcType=CHAR}, #{readerId,jdbcType=CHAR}, #{borrowDate,jdbcType=DATE}, 
+      #{returnDate,jdbcType=DATE}, #{borrowState,jdbcType=DATE}, #{renewState,jdbcType=SMALLINT}, 
+      #{returnReadate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="jmu.hw.po.Borrow">
+    insert into borrow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="readerId != null">
+        reader_id,
+      </if>
+      <if test="borrowDate != null">
+        borrow_date,
+      </if>
+      <if test="returnDate != null">
+        return_date,
+      </if>
+      <if test="borrowState != null">
+        borrow_state,
+      </if>
+      <if test="renewState != null">
+        renew_state,
+      </if>
+      <if test="returnReadate != null">
+        return_readate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        #{bookId,jdbcType=CHAR},
+      </if>
+      <if test="readerId != null">
+        #{readerId,jdbcType=CHAR},
+      </if>
+      <if test="borrowDate != null">
+        #{borrowDate,jdbcType=DATE},
+      </if>
+      <if test="returnDate != null">
+        #{returnDate,jdbcType=DATE},
+      </if>
+      <if test="borrowState != null">
+        #{borrowState,jdbcType=DATE},
+      </if>
+      <if test="renewState != null">
+        #{renewState,jdbcType=SMALLINT},
+      </if>
+      <if test="returnReadate != null">
+        #{returnReadate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="jmu.hw.po.BorrowExample" resultType="java.lang.Long">
+    select count(*) from borrow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update borrow
+    <set>
+      <if test="record.bookId != null">
+        book_id = #{record.bookId,jdbcType=CHAR},
+      </if>
+      <if test="record.readerId != null">
+        reader_id = #{record.readerId,jdbcType=CHAR},
+      </if>
+      <if test="record.borrowDate != null">
+        borrow_date = #{record.borrowDate,jdbcType=DATE},
+      </if>
+      <if test="record.returnDate != null">
+        return_date = #{record.returnDate,jdbcType=DATE},
+      </if>
+      <if test="record.borrowState != null">
+        borrow_state = #{record.borrowState,jdbcType=DATE},
+      </if>
+      <if test="record.renewState != null">
+        renew_state = #{record.renewState,jdbcType=SMALLINT},
+      </if>
+      <if test="record.returnReadate != null">
+        return_readate = #{record.returnReadate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update borrow
+    set book_id = #{record.bookId,jdbcType=CHAR},
+      reader_id = #{record.readerId,jdbcType=CHAR},
+      borrow_date = #{record.borrowDate,jdbcType=DATE},
+      return_date = #{record.returnDate,jdbcType=DATE},
+      borrow_state = #{record.borrowState,jdbcType=DATE},
+      renew_state = #{record.renewState,jdbcType=SMALLINT},
+      return_readate = #{record.returnReadate,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="jmu.hw.po.Borrow">
+    update borrow
+    <set>
+      <if test="returnDate != null">
+        return_date = #{returnDate,jdbcType=DATE},
+      </if>
+      <if test="borrowState != null">
+        borrow_state = #{borrowState,jdbcType=DATE},
+      </if>
+      <if test="renewState != null">
+        renew_state = #{renewState,jdbcType=SMALLINT},
+      </if>
+      <if test="returnReadate != null">
+        return_readate = #{returnReadate,jdbcType=DATE},
+      </if>
+    </set>
+    where book_id = #{bookId,jdbcType=CHAR}
+      and reader_id = #{readerId,jdbcType=CHAR}
+      and borrow_date = #{borrowDate,jdbcType=DATE}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="jmu.hw.po.Borrow">
+    update borrow
+    set return_date = #{returnDate,jdbcType=DATE},
+      borrow_state = #{borrowState,jdbcType=DATE},
+      renew_state = #{renewState,jdbcType=SMALLINT},
+      return_readate = #{returnReadate,jdbcType=DATE}
+    where book_id = #{bookId,jdbcType=CHAR}
+      and reader_id = #{readerId,jdbcType=CHAR}
+      and borrow_date = #{borrowDate,jdbcType=DATE}
+  </update>
+</mapper>
